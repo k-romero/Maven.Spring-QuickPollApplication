@@ -43,10 +43,8 @@ public class RestExceptionHandler {
         error.setDetail("You must've made a bad request, try checking over your work");
         error.setTimeStamp(new Date().getTime());
         error.setDeveloperMessage("This came from " + manve.getCause() + "\n" + manve.getMessage());
-
         List<FieldError> fieldErrors = manve.getBindingResult().getFieldErrors();
         for(FieldError fe : fieldErrors){
-
             List<ValidationError> vErrorList = error.getErrors().get(fe.getField());
             if(vErrorList == null){
                 vErrorList = new ArrayList<>();
@@ -59,5 +57,7 @@ public class RestExceptionHandler {
         }
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
     }
+
+
 
 }
