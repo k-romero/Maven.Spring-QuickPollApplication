@@ -33,16 +33,16 @@ public class ComputeResultController {
         Integer totals = 0;
         for (Vote v : allVotes) {
             totals++;
-            Long vId = v.getId();
-            if(map.containsKey(vId)){
-                OptionCount count = map.get(v.getId());
+            Long vId = v.getOption().getId();
+            if(map.get(vId) == null){
+                OptionCount newCount = new OptionCount();
+                newCount.setCount(1);
+                newCount.setOptionId(v.getOption().getId());
+                map.put(vId,newCount);
+            } else {
+                OptionCount count = map.get(vId);
                 count.setCount(count.getCount()+1);
                 map.replace(vId,map.get(vId),count);
-            } else {
-               OptionCount newCount = new OptionCount();
-               newCount.setCount(1);
-               newCount.setOptionId(v.getOption().getId());
-               map.put(v.getId(),newCount);
             }
         }
         voteResult.setTotalVotes(totals);
