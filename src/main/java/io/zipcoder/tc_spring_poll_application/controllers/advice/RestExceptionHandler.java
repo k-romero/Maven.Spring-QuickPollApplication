@@ -4,6 +4,7 @@ import io.zipcoder.tc_spring_poll_application.dtos.error.ErrorDetail;
 import io.zipcoder.tc_spring_poll_application.dtos.error.ValidationError;
 import io.zipcoder.tc_spring_poll_application.exception.ResourceNotFoundException;
 import org.apache.tomcat.jni.Time;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ import java.util.List;
 
 @ControllerAdvice
 public class RestExceptionHandler {
+
+    @Autowired
+    MessageSource messageSource;
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(ResourceNotFoundException rnfe, HttpServletRequest request){
@@ -50,9 +54,7 @@ public class RestExceptionHandler {
             }
             ValidationError validationError = new ValidationError();
             validationError.setCode(fe.getCode());
-
-            //todo check to see if this .setMessage is accurate
-            validationError.setMessage(fe.getDefaultMessage());
+            validationError.setMessage(messageSource.getMessage(fe,null));
             vErrorList.add(validationError);
         }
         return new ResponseEntity<>(error,HttpStatus.BAD_REQUEST);
